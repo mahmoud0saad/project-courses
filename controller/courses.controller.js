@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 const statusHttpText = require('../utils/status_http.js');
 const asyncWrapper = require('../middleware/validationSchema.js');
 const appError = require('../utils/appError.js');
+const socketUtils = require('../utils/socketUtils.js');
 
 const getAllCourses = asyncWrapper(async (req, res) => {
     const query = req.query;
@@ -43,7 +44,7 @@ const createCourse = asyncWrapper(async (req, res, next) => {
 
     const newCourse = new course(req.body);
     await newCourse.save();
-
+    socketUtils.getIO().emit(`create-course:${req.currentUser.userId}`,newCourse);
 
     return res.status(200).json({ status: statusHttpText.SUCCESS, data: { course: newCourse }, });
 

@@ -2,7 +2,7 @@
 const express = require('express');
 let coursesController = require('../controller/courses.controller.js')
 let validation = require('../validation/validation.js')
-let verifyToken = require('../middleware/verifyToken.js')
+let {verifyToken} = require('../middleware/verifyToken.js')
 let userRole = require('../utils/userRoles.js')
 let allowTo = require('../middleware/allowTo.js')
 

@@ -22,6 +22,15 @@ const verifyToken = (req, res, next) => {
     }
 
 }
+function getDataFromTokenJWT(token) {
+    try {
+        const decoded = jsonwebtoken.verify(token, process.env.JWT_KEY);
+        return decoded;
+    } catch (err) {
+        console.log('eerror  ', err);
 
+        return null;
+    }
+}
 
-module.exports = verifyToken;
+module.exports = { verifyToken, getDataFromTokenJWT };

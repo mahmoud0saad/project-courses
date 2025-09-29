@@ -1,5 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+const socketUtils = require('./utils/socketUtils.js');
+const http = require('http');
+const path = require('path');
+const mongoose = require('mongoose');
 
 require('dotenv').config();
 
@@ -7,19 +11,23 @@ const coursesRoute = require('./routes/course.route.js');
 const userRoute = require('./routes/user.route.js');
 const lessonsRoute = require('./routes/lesson.route.js');
 const statusHttpText = require('./utils/status_http.js');
-const path=require('path')
-const mongoose = require('mongoose');
+
 
 const url = process.env.MONGO_URL;
 
 mongoose.connect(url, { dbName: "learn_node" }).then(() => {
     console.log("mano coneect success mongoos");
 });
-
-
 const app = express();
+
+const myServer = http.createServer(app);
+
+socketUtils.initSocketIO(myServer);
+
+
+
 app.use(cors());
-app.use('/uploads',express.static(path.join(__dirname,'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 //for convert body 
 app.use(express.json());
 
@@ -39,11 +47,11 @@ app.all('{*splat}', (req, res, next) => {
 
 //issue in code 
 app.use((error, req, res, next) => {
-    res.status(error.statusCode||400).json({ status: error.statusText || statusHttpText.ERROR, data: error.data, message: error.message });
+    res.status(error.statusCode || 400).json({ status: error.statusText || statusHttpText.ERROR, data: error.data, message: error.message });
 
 });
 
 
-app.listen(process.env.PORT | 3001, () => {
+myServer.listen(process.env.PORT | 3001, () => {
     console.log('listen on port : 3001');
 });

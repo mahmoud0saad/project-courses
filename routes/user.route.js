@@ -1,6 +1,6 @@
 const express = require('express');
 const userController = require('../controller/user.controller');
-const verifyToken = require('../middleware/verifyToken');
+const {verifyToken} = require('../middleware/verifyToken');
 const multer = require('multer');
 const appError = require('../utils/appError');
 
