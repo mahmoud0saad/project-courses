@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 
 const asyncWrapper = require('../middleware/validationSchema')
 const user = require('../models/user.model');
+const courseMode = require('../models/course.model');
 const appError = require('../utils/appError');
 const statusHttpText = require('../utils/status_http')
 const generateJWT = require('../utils/generate_jwt')
@@ -21,9 +22,9 @@ const getAllUser = asyncWrapper(async (req, res, next) => {
 })
 
 const register = asyncWrapper(async (req, res, next) => {
-    const { name, email, password, role  } = req.body;
+    const { name, email, password, role } = req.body;
     console.log(req.file);
-    
+
     const oldUser = await user.findOne({ email: email });
     if (oldUser) {
         const error = appError.create({ message: "email is exist already", statusCode: 400 });
@@ -63,6 +64,25 @@ const login = asyncWrapper(async (req, res, next) => {
 
 })
 
+const getMyCourses = asyncWrapper(async (req, res, next) => {
+
+    const userId = req.currentUser.userId;
+
+    const courses = await courseMode.find({ createdBy: userId }).populate('lessons');
+
+    res.status(200).json({ data: courses, statusText: statusHttpText.SUCCESS });
+
+});
+
+const getCoursesForUserCreated = asyncWrapper(async (req, res, next) => {
+
+    const userId = req.params.id;
+
+    const courses = await courseMode.find({ createdBy: userId }).populate('lessons');
+
+    res.status(200).json({ data: courses, statusText: statusHttpText.SUCCESS });
+
+});
 
 
-module.exports = { getAllUser, register, login }
+module.exports = { getAllUser, register, login ,getCoursesForUserCreated,getMyCourses}

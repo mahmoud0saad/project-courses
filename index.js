@@ -10,6 +10,7 @@ require('dotenv').config();
 const coursesRoute = require('./routes/course.route.js');
 const userRoute = require('./routes/user.route.js');
 const lessonsRoute = require('./routes/lesson.route.js');
+const enrollmentRout = require('./routes/enrollmentCourse.route.js');
 const statusHttpText = require('./utils/status_http.js');
 
 
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 app.use('/api/courses', coursesRoute.router);
 app.use('/api/user', userRoute.route);
 app.use('/api/lessons', lessonsRoute.route);
+app.use('/api/enrollment', enrollmentRout.route);
 
 app.all('{*splat}', (req, res, next) => {
     return res.status(404).json({ status: statusHttpText.ERROR, data: null, message: 'Page not found' });

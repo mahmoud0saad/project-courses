@@ -7,6 +7,7 @@ module.exports = (...roles) => {
             const error = appError.create({ message: " you aren't allowed", statusCode: 402 });
             next(error);
         }
+        console.log("curren role is ",req.currentUser.role);
         console.log("roles is ", roles);
 
         next();

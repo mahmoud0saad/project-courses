@@ -11,7 +11,17 @@ const courseSchema = new mongoose.Schema({
         type: String,
         required: true
 
-    }
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'user',
+        require: true,
+    },
+    lessons: [
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'lesson'
+        }
+    ]
+
 })
 
 const model = mongoose.model('course', courseSchema);

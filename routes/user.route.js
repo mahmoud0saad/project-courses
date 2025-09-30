@@ -1,6 +1,6 @@
 const express = require('express');
 const userController = require('../controller/user.controller');
-const {verifyToken} = require('../middleware/verifyToken');
+const { verifyToken } = require('../middleware/verifyToken');
 const multer = require('multer');
 const appError = require('../utils/appError');
 
@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         console.log(file);
-        
+
         const ext = file.mimetype.split('/')[1];
         const name = `image_${file.originalname.split('.')[0]}_${Date.now()}.${ext}`;
         cb(null, name);
@@ -37,8 +37,10 @@ route.get('/', verifyToken, userController.getAllUser);
 route.post('/register', upload.single('avatar'), userController.register);
 route.post('/login', userController.login);
 
-
-
+route.route('/courses')
+    .get(verifyToken, userController.getMyCourses);
+route.route('/:id/courses')
+    .get(verifyToken, userController.getCoursesForUserCreated);
 
 
 module.exports = { route };

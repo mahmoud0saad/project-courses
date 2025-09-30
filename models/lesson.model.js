@@ -1,19 +1,18 @@
 
-const mongoose =require('mongoose')
+const mongoose = require('mongoose')
 
 
 const lessonSchema = new mongoose.Schema({
-    title:{
-        require : true,
-        type:String
+    title: {
+        require: true,
+        type: String
     },
-    courseId:{
-        type:String,
-        require :true,
-    }
+    createAt: { type: Date, default: Date.now },
+    duration: { type: String, require: true },
+    courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'course' }
 
 });
 
-const model=  mongoose.model('lesson',lessonSchema);
+const model = mongoose.model('lesson', lessonSchema);
 
-module.exports=model
+module.exports = model
