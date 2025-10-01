@@ -10,6 +10,7 @@ const route = express.Router();
 route.get('/user/:id/courses', enrollmentController.getUserCoursesEnrollment);
 route.get('/', enrollmentController.getAllEnrollment);
 route.post('/course/:id',verifyToken, enrollmentController.enrollInCourse);
+route.get('/course/:id/students',verifyToken, enrollmentController.getCourseUsers);
 route.patch('/:id',verifyToken,updateEnrollmentCourse,handelValidation, enrollmentController.updateEnrollmentStatus);
 
 

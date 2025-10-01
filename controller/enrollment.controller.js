@@ -4,6 +4,7 @@ const enrollmentModel = require("../models/enrollment.model");
 const appError = require("../utils/appError");
 const { PENDING } = require("../utils/courseStatus");
 const { SUCCESS } = require("../utils/status_http");
+const roles = require("../utils/userRoles");
 
 
 const getUserCoursesEnrollment = asyncWrapper(async (req, res, next) => {
@@ -41,15 +42,27 @@ const enrollInCourse = asyncWrapper(async (req, res, next) => {
 });
 
 
+const getCourseUsers = asyncWrapper(async (req, res, next) => {
+    const courseId = req.params.id;
+
+    const allUserResult = await enrollmentModel.find({ course: courseId },).select('user').populate({ path: 'user', select: '-password -token -__v', match: { role: roles.USER } });
+
+    const allUser = allUserResult.map((e) => e.user).filter((e) => e != null);
+
+    res.status(200).json({ data: allUser, statusText: SUCCESS });
+
+});
+
+
 const updateEnrollmentStatus = asyncWrapper(async (req, res, next) => {
     const enrollmentId = req.params.id;
-     
+
     const status = req.body.status;
-    
+
     const enrollIn = await enrollmentModel.findByIdAndUpdate(enrollmentId, { status: status });
     res.status(200).json({ data: enrollIn, statusText: SUCCESS });
 
 })
 
 
-module.exports = { getUserCoursesEnrollment, getAllEnrollment, enrollInCourse, updateEnrollmentStatus };
+module.exports = { getUserCoursesEnrollment, getAllEnrollment, enrollInCourse, updateEnrollmentStatus, getCourseUsers };
